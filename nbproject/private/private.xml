@@ -3,7 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/Jron/Documents/FinalProject/src/Model/User.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/LogInView.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/Main/FinalProject.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/Model/User.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/SignUpView.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/AdminHomePage.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/ForgetPassword.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/Model/Admin.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/TopUp.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/Reset.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/Controller/Controller.java</file>
+            <file>file:/C:/Users/user/Documents/NetBeansProjects/FinalProject/src/View/UserHomePage.java</file>
         </group>
     </open-files>
 </project-private>

@@ -18,17 +18,15 @@ public class Parent
     public Parent(){}
     public void establishConnection()
     {
-        try 
-        {
+        try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/finalproject","root","");
             st = conn.createStatement();
             if(!conn.isValid(5))
             {
                 System.out.println("Connection Error");
             }
-        } 
-        catch (SQLException ex) 
-        {
+            
+        } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         } 
     }

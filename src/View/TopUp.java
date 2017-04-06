@@ -6,8 +6,6 @@
 package View;
 
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 /**
  *
@@ -20,6 +18,8 @@ public class TopUp extends javax.swing.JFrame {
      */
     public TopUp() {
         initComponents();
+        setTitle("Top Up");//set the title of the jframe
+        setLocationRelativeTo(null);
     }
     public String getCCNo() {
         return jTextField1.getText();
@@ -40,11 +40,22 @@ public class TopUp extends javax.swing.JFrame {
      public void setActionListenertopUp(ActionListener a) {
         jButton1.addActionListener(a);
     }
+    public void setActionListenerCancel(ActionListener a) {
+        jButton2.addActionListener(a);
+    }
      public int getAmount() {
         return (int) jSpinner1.getValue();
     }
      public void setErrorText(String error){
         jLabel8.setText(error);
+    }
+    public void refresh()
+    {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jLabel8.setText("");
+        jSpinner1.setValue(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,8 +81,10 @@ public class TopUp extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jLabel8 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Top Up");
 
@@ -90,6 +103,8 @@ public class TopUp extends javax.swing.JFrame {
         jLabel7.setText("Amount                      :");
 
         jLabel8.setForeground(new java.awt.Color(204, 0, 0));
+
+        jButton2.setText("Cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,7 +135,10 @@ public class TopUp extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addGap(18, 18, 18)
                             .addComponent(jTextField3))
-                        .addComponent(jButton1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton1)
+                            .addGap(30, 30, 30)
+                            .addComponent(jButton2))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel7)
                             .addGap(18, 18, 18)
@@ -161,7 +179,9 @@ public class TopUp extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(28, 28, 28))
         );
 
@@ -206,6 +226,7 @@ public class TopUp extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

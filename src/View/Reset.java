@@ -1,17 +1,21 @@
 package View;
 
+import java.awt.Component;
 import java.awt.event.ActionListener;
 
 public class Reset extends javax.swing.JFrame 
 {
     public Reset() 
     {
+        setTitle("Reset password");//set the title of the jframe
+        setLocationRelativeTo(null);
         initComponents();
     }
     @SuppressWarnings("unchecked")
     public void setActionListenerResetPassword(ActionListener a) {
         jButton1.addActionListener(a);
     }
+
      public String getPassword()
     {
         return jPasswordField1.getText();
@@ -26,11 +30,20 @@ public class Reset extends javax.swing.JFrame
     }
     public void setSuccessMessage(String message)
     {
-        jLabel5.setText(message);
+        Component frame=null;
+        jOptionPane1.showMessageDialog(frame, "Reset Password Successful!! ");
+    }
+    public void refresh()
+    {
+        jPasswordField1.setText("");
+        jPasswordField2.setText("");
+        jLabel4.setText("");
+        jLabel5.setText("");
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -68,11 +81,10 @@ public class Reset extends javax.swing.JFrame
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(66, 66, 66)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jPasswordField1)
-                                .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
+                            .addComponent(jPasswordField1)
+                            .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))))
                 .addContainerGap(52, Short.MAX_VALUE))
@@ -109,6 +121,7 @@ public class Reset extends javax.swing.JFrame
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     // End of variables declaration//GEN-END:variables

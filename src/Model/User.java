@@ -1,11 +1,9 @@
 package Model;
 
 import Controller.Controller;
-import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.swing.ImageIcon;
 
 public class User 
 {
@@ -113,22 +110,23 @@ public class User
         ArrayList<Songs> list = new ArrayList<Songs>();
         try 
         {
+            
             ResultSet rs = st.executeQuery("SELECT `title`,`artist`,`album`,`album_photo`,`genre`,`popularity`,`price` FROM `song_tbl`");
 
             Songs p;
-            while(rs.next())
-            {
-                p = new Songs(
-                rs.getString("title"),
-                rs.getString("artist"),
-                rs.getString("album"),
-                rs.getBytes("album_photo"),
-                rs.getString("genre"),
-                rs.getInt("popularity"),
-                rs.getInt("price")
-                );
-                list.add(p);
-            }
+            while(rs.next()){
+            p = new Songs(
+            rs.getString("title"),
+            rs.getString("artist"),
+            rs.getString("album"),
+            rs.getBytes("album_photo"),
+            rs.getString("genre"),
+            rs.getInt("popularity"),
+            rs.getInt("price")
+            );
+            list.add(p);
+        }
+
         } 
         catch (SQLException ex) 
         {
@@ -147,46 +145,47 @@ public class User
             String query2 ="SELECT * FROM user WHERE username='" + username + "'";
             ResultSet rs = st.executeQuery(query2);
             int user_ID = 0;
-            if (rs.next())
-            {
+            if (rs.next()){
                 user_ID = rs.getInt("user_ID");
             }
             rs= st.executeQuery("SELECT * FROM `song_list` WHERE user_ID='" + user_ID + "'");
 
-            while(rs.next())
-            {
-                alist.add(rs.getInt("song_ID"));
-            }                  
-            if(alist.size() > 0)
-            {
-                song_list_query = "SELECT `title`,`artist`,`album`,`album_photo`,`genre`,`popularity`,`price` FROM `song_tbl` WHERE song_ID='" + alist.get(0) + "'";
-                if(alist.size() >1)
+                while(rs.next())
                 {
-                    for(int i=1;i<alist.size();i++)
-                    {
-                        song_list_query += " OR song_ID='" + alist.get(i) + "'";
-                    }
+                    alist.add(rs.getInt("song_ID"));
                 }
-                rs = st.executeQuery(song_list_query);
-            }
-            else
-            {
-                System.out.println("eeror2");
-            }
+                
+               
+                if(alist.size() > 0)
+                {
+                    song_list_query = "SELECT `title`,`artist`,`album`,`album_photo`,`genre`,`popularity`,`price` FROM `song_tbl` WHERE song_ID='" + alist.get(0) + "'";
+                    if(alist.size() >1)
+                    {
+                        for(int i=1;i<alist.size();i++)
+                        {
+                            song_list_query += " OR song_ID='" + alist.get(i) + "'";
+                        }
+                    }
+                     rs = st.executeQuery(song_list_query);
+                }
+                else
+                {
+                    System.out.println("eeror2");
+                }
             Songs p;
-            while(rs.next())
-            {
-                p = new Songs(
-                rs.getString("title"),
-                rs.getString("artist"),
-                rs.getString("album"),
-                rs.getBytes("album_photo"),
-                rs.getString("genre"),
-                rs.getInt("popularity"),
-                rs.getInt("price")
-                );
-                list.add(p);
-            }
+            while(rs.next()){
+            p = new Songs(
+            rs.getString("title"),
+            rs.getString("artist"),
+            rs.getString("album"),
+            rs.getBytes("album_photo"),
+            rs.getString("genre"),
+            rs.getInt("popularity"),
+            rs.getInt("price")
+            );
+            list.add(p);
+        }
+
         } 
         catch (SQLException ex) 
         {
@@ -194,10 +193,10 @@ public class User
         }
         return list;
     }
-    public boolean insertSongList(String title, String artist, String album, String username)
+    public int insertSongList(String title, String artist, String album, String username)
     {
         this.establishConnection();
-        try 
+         try 
         {
             System.out.println("1");
             String query ="SELECT * FROM song_tbl WHERE title='" + title + "' AND artist='" + artist + "' AND album='" + album + "'";
@@ -206,8 +205,7 @@ public class User
             int balance=0;
             int popularity =0;
             int price=0;
-            if (rs.next())
-            {
+            if (rs.next()){
                 song_ID = rs.getInt("song_ID");
                 popularity = rs.getInt("popularity");
                 price = rs.getInt("price");
@@ -217,8 +215,7 @@ public class User
             String query2 ="SELECT * FROM User WHERE username='" + username + "'";
             rs = st.executeQuery(query2);
             int user_ID = 0;
-            if (rs.next())
-            {
+            if (rs.next()){
                 user_ID = rs.getInt("user_ID");
                 balance = rs.getInt("balance");
             }
@@ -236,16 +233,22 @@ public class User
                 String query5 = "UPDATE song_tbl SET popularity='" + popularity + "' WHERE title='" + title + "' AND artist='" + artist + "' AND album='" + album + "'";
                 int rs2 = st.executeUpdate(query5);
                 balance = balance - price;
-                String query6 = "UPDATE user SET balance='" + balance + "' WHERE username='" + username + "'";
-                int rs3 = st.executeUpdate(query6);
-                System.out.println("sadhfajdsfhdasfadsfjasdfijdsaf");
-                
-                return true;
+                if(balance >0)
+                {
+                    String query6 = "UPDATE user SET balance='" + balance + "' WHERE username='" + username + "'";
+                    int rs3 = st.executeUpdate(query6);
+                    System.out.println("sadhfajdsfhdasfadsfjasdfijdsaf");
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
             }
             else
             {
                 System.out.println("Song already purchased!!");
-                return false;
+                return 2;
             }
         } 
         catch (SQLException ex) 
@@ -254,129 +257,106 @@ public class User
             System.out.println("Error: " + ex);
 
         }
-        return true;
+        return 0;
         
     }
     public boolean sendVerificationCode(String email, String randNumbers)
     {
         establishConnection();
-        final String username = "jkctunespedia@gmail.com";
-	final String password = "jkctunespedia123";
+        boolean flag=true;
+       final String username = "jkctunespedia@gmail.com";
+		final String password = "jkctunespedia123";
                 
-	Properties props = new Properties();
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
-	props.put("mail.smtp.port", "587");
-	Session session = Session.getInstance(
-        props, new javax.mail.Authenticator() 
-        {
-            protected PasswordAuthentication getPasswordAuthentication() 
-            {
-		return new PasswordAuthentication(username, password);
-            }
-        });          
-        try 
-        {
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+		Session session = Session.getInstance(props,
+		new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		  });
+                  
+                     try {
             ResultSet rs = st.executeQuery("SELECT * FROM user WHERE email='"+ email +"'");
             if(rs.next())
             {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(email));
-                       
-                System.out.println(randNumbers);
-                message.setSubject("Verification Code");
-                message.setText("Dear "+ rs.getString("username") + ","+ "\n\nYour TunesPedia Verification Code is : " + randNumbers);
-                            
-                Transport.send(message);
-
-		System.out.println("Done");
-                randNumbers="";
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        } 
-        catch (AddressException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (MessagingException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (SQLException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return true;
-    }
-    public boolean sendSignUpCode(String email, String randNumbers)
-    {
-        establishConnection();
-        final String username = "jkctunespedia@gmail.com";
-	final String password = "jkctunespedia123";
-                
-	Properties props = new Properties();
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
-	props.put("mail.smtp.port", "587");
-	Session session = Session.getInstance(
-        props, new javax.mail.Authenticator() 
-        {
-            protected PasswordAuthentication getPasswordAuthentication() 
-            {
-		return new PasswordAuthentication(username, password);
-            }
-        });
-        try 
-        {
-            ResultSet rs = st.executeQuery("SELECT * FROM user WHERE email='"+ email +"'");
-            if(rs.next())
-            {
-                Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO,
+                        message.setRecipients(Message.RecipientType.TO,
                         InternetAddress.parse(email));
                        
-                System.out.println(randNumbers);
-                message.setSubject("Verification Code");
-                message.setText("Dear "+ rs.getString("username") + ","+ "\n\nYour TunesPedia Sign Up Verification Code is : " + randNumbers);
+                            System.out.println(randNumbers);
+                            message.setSubject("Verification Code");
+                            message.setText("Dear "+ rs.getString("username") + ","+ "\n\nYour TunesPedia Verification Code is : " + randNumbers);
                             
-                Transport.send(message);
+                            Transport.send(message);
 
-		System.out.println("Done");
-                return true;
+			System.out.println("Done");
+                        randNumbers="";
+                        flag= true;
             }
-            else
-            {
-                return false;
-            }
-        } 
-        catch (AddressException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (MessagingException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        catch (SQLException ex) 
-        {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return true;
+                        else
+                        {
+                            flag= false;
+                        }
+                    } catch (AddressException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MessagingException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                     return flag;
     }
+    public boolean sendSignUpCode(String email,String user, String randNumbers)
+    {
+        establishConnection();
+       final String username = "jkctunespedia@gmail.com";
+		final String password = "jkctunespedia123";
+                
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+		Session session = Session.getInstance(props,
+		new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		  });
+                  
+                     try {
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                        message.setRecipients(Message.RecipientType.TO,
+                        InternetAddress.parse(email));
+                       
+                            System.out.println(randNumbers);
+                            message.setSubject("Verification Code");
+                            message.setText("Dear "+ user + ","+ "\n\nYour TunesPedia Sign Up Verification Code is : " + randNumbers);
+                            
+                            Transport.send(message);
+
+			System.out.println("Done");
+                        
+                    } catch (AddressException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MessagingException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                     return true;
+    }
+    
     public boolean resetPassword(String password, String password2, String email)
     {
-        if(validatePassword(password, password2))
+        if(validatePassword(password, password2) && !password.equals(""))
         {
-            try 
+             try 
             {
                 String query = "UPDATE user SET password='" + password + "' WHERE email='" + email + "'";
                 int rs1 = st.executeUpdate(query);
@@ -397,16 +377,13 @@ public class User
     {
         int balance =0;
         establishConnection();
-        try 
-        {
+        try {
             ResultSet rs= st.executeQuery("SELECT * FROM `user` WHERE username='" + username+ "'");
             if(rs.next())
             {
                 balance = rs.getInt("balance");
             }
-        } 
-        catch (SQLException ex) 
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
         return balance;
@@ -415,21 +392,103 @@ public class User
     {
         int balance=0;
         establishConnection();
-        try 
-        {
-            String query ="SELECT * FROM User WHERE username='" + username + "'";
+        try {
+              String query ="SELECT * FROM User WHERE username='" + username + "'";
+              ResultSet rs = st.executeQuery(query);
+              if(rs.next())
+              {
+                  balance = rs.getInt("balance");
+              }
+              balance += amount;
+              String query2 = "UPDATE user SET balance='" + balance + "' WHERE username='" + username + "'";
+              int rs2 = st.executeUpdate(query2);
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String getFilePath(String title, String artist)
+    {
+        establishConnection();
+        String filepath="";
+        try {
+              String query ="SELECT * FROM song_tbl WHERE title='" + title + "' AND artist='" + artist + "'";
+              ResultSet rs = st.executeQuery(query);
+              if(rs.next())
+              {
+                  filepath = rs.getString("audio_file");
+              }
+              
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return filepath;
+    }
+ 
+    public boolean validatePlay(String title, String artist, String album, String username)
+    {
+        try {
+            establishConnection();
+            String query ="SELECT * FROM song_tbl WHERE title='" + title + "' AND artist='" + artist + "' AND album='" + album + "'";
             ResultSet rs = st.executeQuery(query);
+            int song_ID=0;
+            if (rs.next()){
+                song_ID = rs.getInt("song_ID");
+            }
+            String query2 ="SELECT * FROM User WHERE username='" + username + "'";
+            rs = st.executeQuery(query2);
+            int user_ID = 0;
+            if (rs.next()){
+                user_ID = rs.getInt("user_ID");
+            }
+            String query3 = "SELECT * FROM song_list WHERE user_ID='" + user_ID + "' AND song_ID='" + song_ID + "'";
+            rs = st.executeQuery(query3);
             if(rs.next())
             {
-                balance = rs.getInt("balance");
+                return true;
             }
-            balance += amount;
-            String query2 = "UPDATE user SET balance='" + balance + "' WHERE username='" + username + "'";
-            int rs2 = st.executeUpdate(query2);
+            else
+            {
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public ArrayList<Songs> search(String text)
+    {
+        this.establishConnection();
+        String query = "";
+        ArrayList<Songs> list = new ArrayList<Songs>();
+        try 
+        {
+            list.clear();
+            query = "SELECT `title`,`artist`,`album`,`album_photo`,`genre`,`popularity`,`price` FROM `song_tbl` WHERE title LIKE '%" + text + "%' OR artist LIKE '%" + text + 
+                            "%' OR genre LIKE '%" + text + "' OR album LIKE '%" + text + "%' ";
+            ResultSet rs = st.executeQuery(query);
+            
+            Songs p;
+
+ 
+                while(rs.next())
+                {
+                    p = new Songs(
+                    rs.getString("title"),
+                    rs.getString("artist"),
+                    rs.getString("album"),
+                    rs.getBytes("album_photo"),
+                    rs.getString("genre"),
+                    rs.getInt("popularity"),
+                    rs.getInt("price")
+                    );
+                    list.add(p); 
+                 }
         } 
         catch (SQLException ex) 
         {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return list;
+
     }
 }
